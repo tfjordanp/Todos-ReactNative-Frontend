@@ -15,9 +15,11 @@ export function SignupScreen({ navigation }: Props) {
 
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   async function onSubmit() {
     setErrors({});
+    setErrorMessage(null);
     const parsed = signupSchema.safeParse({ username, password });
     if (!parsed.success) {
       setErrors(zodFieldErrors(parsed.error));
@@ -27,8 +29,11 @@ export function SignupScreen({ navigation }: Props) {
     setBusy(true);
     try {
       await signup(parsed.data);
+      // Auto-redirect to login with success message
+      navigation.replace("Login", { success: "Account created! Please log in." });
     } catch (e: any) {
-      Alert.alert("Signup failed", e?.response?.data?.detail ?? "Try again.");
+      const errorMsg = e?.response?.data?.detail ?? "Signup failed. Please try again.";
+      setErrorMessage(errorMsg);
     } finally {
       setBusy(false);
     }
@@ -37,6 +42,12 @@ export function SignupScreen({ navigation }: Props) {
   return (
     <View style={styles.root}>
       <Text style={styles.h1}>Sign up</Text>
+
+      {errorMessage && (
+        <View style={styles.errorBanner}>
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        </View>
+      )}
 
       <TextInput
         style={styles.input}
@@ -80,4 +91,8 @@ const styles = StyleSheet.create({
   h1: { fontSize: 28, fontWeight: "700", marginBottom: 10 },
   input: { borderWidth: 1, borderRadius: 8, padding: 12 },
   spacer: { height: 8 },
+  successBanner: { backgroundColor: "#d4edda", padding: 12, borderRadius: 8, marginBottom: 10 },
+  successText: { color: "#155724", fontSize: 14, fontWeight: "600" },
+  errorBanner: { backgroundColor: "#f8d7da", padding: 12, borderRadius: 8, marginBottom: 10 },
+  errorText: { color: "#721c24", fontSize: 14, fontWeight: "600" },
 });

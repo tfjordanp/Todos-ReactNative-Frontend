@@ -16,7 +16,7 @@ export async function login(data: LoginRequest) {
 }
 
 export async function signup(data: SignupRequest) {
-  const res = await api.post<AuthResponse>("/auth/register", data);
+  const res = await api.post<User>("/auth/register", data);
   return res.data;
 }
 

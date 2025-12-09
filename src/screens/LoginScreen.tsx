@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { AuthStackParamList } from "../navigation/AuthStack";
@@ -8,16 +8,38 @@ import { FieldError } from "../components/FieldError";
 
 type Props = NativeStackScreenProps<AuthStackParamList, "Login">;
 
-export function LoginScreen({ navigation }: Props) {
-  const { login } = useAuth();
+export function LoginScreen({ navigation, route }: Props) {
+  const { login, isAuthenticated } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Auto-redirect when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Login" }],
+      });
+    }
+  }, [isAuthenticated, navigation]);
+
+  // Show success message from signup
+  useEffect(() => {
+    if (route.params?.success) {
+      setSuccessMessage(route.params.success);
+      setTimeout(() => setSuccessMessage(null), 3000);
+    }
+  }, [route.params?.success]);
 
   async function onSubmit() {
     setErrors({});
+    setSuccessMessage(null);
+    setErrorMessage(null);
     const parsed = loginSchema.safeParse({ username, password });
     if (!parsed.success) {
       setErrors(zodFieldErrors(parsed.error));
@@ -27,8 +49,12 @@ export function LoginScreen({ navigation }: Props) {
     setBusy(true);
     try {
       await login(parsed.data);
+      setUsername("");
+      setPassword("");
+      setSuccessMessage("Login successful!");
     } catch (e: any) {
-      Alert.alert("Login failed", e?.response?.data?.detail ?? "Try again.");
+      const errorMsg = e?.response?.data?.detail ?? "Invalid credentials. Please try again.";
+      setErrorMessage(errorMsg);
     } finally {
       setBusy(false);
     }
@@ -37,6 +63,18 @@ export function LoginScreen({ navigation }: Props) {
   return (
     <View style={styles.root}>
       <Text style={styles.h1}>Login</Text>
+
+      {successMessage && (
+        <View style={styles.successBanner}>
+          <Text style={styles.successText}>{successMessage}</Text>
+        </View>
+      )}
+
+      {errorMessage && (
+        <View style={styles.errorBanner}>
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        </View>
+      )}
 
       <TextInput
         style={styles.input}
@@ -80,4 +118,8 @@ const styles = StyleSheet.create({
   h1: { fontSize: 28, fontWeight: "700", marginBottom: 10 },
   input: { borderWidth: 1, borderRadius: 8, padding: 12 },
   spacer: { height: 8 },
+  successBanner: { backgroundColor: "#d4edda", padding: 12, borderRadius: 8, marginBottom: 10 },
+  successText: { color: "#155724", fontSize: 14, fontWeight: "600" },
+  errorBanner: { backgroundColor: "#f8d7da", padding: 12, borderRadius: 8, marginBottom: 10 },
+  errorText: { color: "#721c24", fontSize: 14, fontWeight: "600" },
 });

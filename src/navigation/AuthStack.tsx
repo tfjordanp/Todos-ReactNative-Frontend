@@ -4,7 +4,7 @@ import { LoginScreen } from "../screens/LoginScreen";
 import { SignupScreen } from "../screens/SignupScreen";
 
 export type AuthStackParamList = {
-  Login: undefined;
+  Login: { success?: string } | undefined;
   Signup: undefined;
 };
 

@@ -53,10 +53,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function signup(data: SignupRequest) {
-    const res = await authService.signup(data);
-    await setToken(res.access_token);
-    const me = await authService.fetchMe();
-    setUser(me);
+    const user = await authService.signup(data);
+    // After signup, user needs to login to get auth token
+    // Redirect to login will be handled by the screen
+    setUser(null);
   }
 
   async function logout() {
