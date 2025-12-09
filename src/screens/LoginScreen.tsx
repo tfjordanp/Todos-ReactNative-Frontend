@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { YStack, XStack, Text, ScrollView } from "tamagui";
 import { AuthStackParamList } from "../navigation/AuthStack";
 import { useAuth } from "../context/AuthContext";
 import { loginSchema, zodFieldErrors } from "../utils/validation";
-import { FieldError } from "../components/FieldError";
+import { TextInput } from "../components/ui/TextInput";
+import { PrimaryButton, SecondaryButton } from "../components/ui/Button";
+import { Alert } from "../components/ui/Alert";
 
 type Props = NativeStackScreenProps<AuthStackParamList, "Login">;
 
@@ -61,65 +63,62 @@ export function LoginScreen({ navigation, route }: Props) {
   }
 
   return (
-    <View style={styles.root}>
-      <Text style={styles.h1}>Login</Text>
+    <ScrollView flex={1} backgroundColor="$bg">
+      <YStack flex={1} padding="$5" justifyContent="center" gap="$4">
+        {/* Header */}
+        <YStack gap="$2" alignItems="center">
+          <Text fontSize={32} fontWeight="700" color="$colorFocus">
+            Welcome
+          </Text>
+          <Text fontSize={14} color="$colorPlaceholder">
+            Sign in to your account to continue
+          </Text>
+        </YStack>
 
-      {successMessage && (
-        <View style={styles.successBanner}>
-          <Text style={styles.successText}>{successMessage}</Text>
-        </View>
-      )}
+        {/* Success Alert */}
+        {successMessage && <Alert type="success" message={successMessage} />}
 
-      {errorMessage && (
-        <View style={styles.errorBanner}>
-          <Text style={styles.errorText}>{errorMessage}</Text>
-        </View>
-      )}
+        {/* Error Alert */}
+        {errorMessage && <Alert type="error" title="Login Failed" message={errorMessage} />}
 
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        autoCapitalize="none"
-        value={username}
-        onChangeText={setUsername}
-        editable={!busy}
-      />
-      <FieldError message={errors.username} />
+        {/* Form */}
+        <YStack gap="$3">
+          <TextInput
+            label="Username"
+            placeholder="Enter your username"
+            autoCapitalize="none"
+            value={username}
+            onChangeText={setUsername}
+            editable={!busy}
+            error={errors.username}
+          />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-        editable={!busy}
-      />
-      <FieldError message={errors.password} />
+          <TextInput
+            label="Password"
+            placeholder="Enter your password"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+            editable={!busy}
+            error={errors.password}
+          />
+        </YStack>
 
-      <Button
-        title={busy ? "Signing in..." : "Login"}
-        onPress={onSubmit}
-        disabled={busy}
-      />
+        {/* Buttons */}
+        <YStack gap="$3">
+          <PrimaryButton
+            title={busy ? "Signing in..." : "Sign In"}
+            onPress={onSubmit}
+            disabled={busy}
+          />
 
-      <View style={styles.spacer} />
-
-      <Button
-        title="New here? Create an account"
-        onPress={() => navigation.navigate("Signup")}
-        disabled={busy}
-      />
-    </View>
+          <SecondaryButton
+            title="Create an account"
+            onPress={() => navigation.navigate("Signup")}
+            disabled={busy}
+          />
+        </YStack>
+      </YStack>
+    </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  root: { flex: 1, padding: 20, justifyContent: "center", gap: 10 },
-  h1: { fontSize: 28, fontWeight: "700", marginBottom: 10 },
-  input: { borderWidth: 1, borderRadius: 8, padding: 12 },
-  spacer: { height: 8 },
-  successBanner: { backgroundColor: "#d4edda", padding: 12, borderRadius: 8, marginBottom: 10 },
-  successText: { color: "#155724", fontSize: 14, fontWeight: "600" },
-  errorBanner: { backgroundColor: "#f8d7da", padding: 12, borderRadius: 8, marginBottom: 10 },
-  errorText: { color: "#721c24", fontSize: 14, fontWeight: "600" },
-});

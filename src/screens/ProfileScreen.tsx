@@ -1,43 +1,91 @@
 import React from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { YStack, XStack, Text } from "tamagui";
 import { useAuth } from "../context/AuthContext";
+import { PrimaryButton, SecondaryButton } from "../components/ui/Button";
 
 export function ProfileScreen() {
   const { user, logout, refreshMe } = useAuth();
 
   return (
-    <View style={styles.root}>
-      <Text style={styles.h1}>Profile</Text>
+    <YStack flex={1} backgroundColor="$bg" padding="$5" gap="$5">
+      {/* Header */}
+      <YStack gap="$2" alignItems="center" paddingVertical="$4">
+        <YStack
+          width={80}
+          height={80}
+          borderRadius={40}
+          backgroundColor="$colorFocus"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Text fontSize={32} fontWeight="700" color="white">
+            {user?.username?.charAt(0).toUpperCase() || "U"}
+          </Text>
+        </YStack>
+        <Text fontSize={24} fontWeight="700" color="$color">
+          {user?.username || "User"}
+        </Text>
+        <Text fontSize={14} color="$colorPlaceholder">
+          {user?.is_active ? "Active" : "Inactive"}
+        </Text>
+      </YStack>
 
-      <View style={styles.card}>
-        <Text style={styles.label}>Username</Text>
-        <Text style={styles.value}>{user?.username ?? "-"}</Text>
+      {/* Profile Card */}
+      <YStack
+        borderWidth={1}
+        borderColor="$borderColor"
+        borderRadius="$4"
+        padding="$4"
+        backgroundColor="$bgSecondary"
+        gap="$3"
+      >
+        <YStack>
+          <Text fontSize={12} fontWeight="600" color="$colorPlaceholder" marginBottom="$1">
+            User ID
+          </Text>
+          <Text fontSize={16} fontWeight="600" color="$color">
+            {user?.id || "-"}
+          </Text>
+        </YStack>
 
-        <Text style={styles.label}>Status</Text>
-        <Text style={styles.value}>{user?.is_active ? "Active" : "Inactive"}</Text>
-      </View>
+        <YStack>
+          <Text fontSize={12} fontWeight="600" color="$colorPlaceholder" marginBottom="$1">
+            Username
+          </Text>
+          <Text fontSize={16} fontWeight="600" color="$color">
+            {user?.username || "-"}
+          </Text>
+        </YStack>
 
-      <View style={styles.row}>
-        <Button title="Refresh profile" onPress={refreshMe} />
-      </View>
+        <YStack>
+          <Text fontSize={12} fontWeight="600" color="$colorPlaceholder" marginBottom="$1">
+            Status
+          </Text>
+          <XStack alignItems="center" gap="$2">
+            <YStack
+              width={12}
+              height={12}
+              borderRadius={6}
+              backgroundColor={user?.is_active ? "$success500" : "$gray400"}
+            />
+            <Text fontSize={16} fontWeight="600" color="$color">
+              {user?.is_active ? "Active" : "Inactive"}
+            </Text>
+          </XStack>
+        </YStack>
+      </YStack>
 
-      <View style={styles.row}>
-        <Button title="Logout" onPress={logout} />
-      </View>
-    </View>
+      {/* Actions */}
+      <YStack gap="$2" flex={1} justifyContent="flex-end">
+        <SecondaryButton
+          title="Refresh Profile"
+          onPress={refreshMe}
+        />
+        <PrimaryButton
+          title="Logout"
+          onPress={logout}
+        />
+      </YStack>
+    </YStack>
   );
 }
-
-const styles = StyleSheet.create({
-  root: { flex: 1, padding: 16, gap: 12 },
-  h1: { fontSize: 26, fontWeight: "700" },
-  card: {
-    borderWidth: 1,
-    borderRadius: 12,
-    padding: 14,
-    gap: 6,
-  },
-  label: { fontSize: 12, opacity: 0.6, marginTop: 6 },
-  value: { fontSize: 16, fontWeight: "600" },
-  row: { marginTop: 6 },
-});
