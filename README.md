@@ -2,6 +2,16 @@
 
 A React Native todo app built with Expo, React Navigation, React Query, and Zod validation.
 
+
+<img src="https://github.com/tfjordanp/Todos-ReactNative-Frontend/blob/main/demos/Login.PNG" alt="LOGIN"/>
+<br/>
+<img src="https://github.com/tfjordanp/Todos-ReactNative-Frontend/blob/main/demos/Signup.PNG" alt="SIGNUP"/>
+<br/>
+<img src="https://github.com/tfjordanp/Todos-ReactNative-Frontend/blob/main/demos/Dashboard.PNG" alt="DASHBOARD"/>
+<br/>
+<img src="https://github.com/tfjordanp/Todos-ReactNative-Frontend/blob/main/demos/Profile.PNG" alt="PROFILE"/>
+<br/>
+
 ## Features
 
 - **Authentication**: Login and signup with email/password
