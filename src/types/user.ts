@@ -1,5 +1,5 @@
 export type User = {
-  id: number | string;
-  name: string;
-  email: string;
+  id: number;
+  username: string;
+  is_active: boolean;
 };

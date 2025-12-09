@@ -10,11 +10,11 @@ export function ProfileScreen() {
       <Text style={styles.h1}>Profile</Text>
 
       <View style={styles.card}>
-        <Text style={styles.label}>Name</Text>
-        <Text style={styles.value}>{user?.name ?? "-"}</Text>
+        <Text style={styles.label}>Username</Text>
+        <Text style={styles.value}>{user?.username ?? "-"}</Text>
 
-        <Text style={styles.label}>Email</Text>
-        <Text style={styles.value}>{user?.email ?? "-"}</Text>
+        <Text style={styles.label}>Status</Text>
+        <Text style={styles.value}>{user?.is_active ? "Active" : "Inactive"}</Text>
       </View>
 
       <View style={styles.row}>

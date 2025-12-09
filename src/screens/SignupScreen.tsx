@@ -10,8 +10,7 @@ type Props = NativeStackScreenProps<AuthStackParamList, "Signup">;
 
 export function SignupScreen({ navigation }: Props) {
   const { signup } = useAuth();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const [busy, setBusy] = useState(false);
@@ -19,7 +18,7 @@ export function SignupScreen({ navigation }: Props) {
 
   async function onSubmit() {
     setErrors({});
-    const parsed = signupSchema.safeParse({ name, email, password });
+    const parsed = signupSchema.safeParse({ username, password });
     if (!parsed.success) {
       setErrors(zodFieldErrors(parsed.error));
       return;
@@ -41,23 +40,13 @@ export function SignupScreen({ navigation }: Props) {
 
       <TextInput
         style={styles.input}
-        placeholder="Name"
-        value={name}
-        onChangeText={setName}
-        editable={!busy}
-      />
-      <FieldError message={errors.name} />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
+        placeholder="Username"
         autoCapitalize="none"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
+        value={username}
+        onChangeText={setUsername}
         editable={!busy}
       />
-      <FieldError message={errors.email} />
+      <FieldError message={errors.username} />
 
       <TextInput
         style={styles.input}

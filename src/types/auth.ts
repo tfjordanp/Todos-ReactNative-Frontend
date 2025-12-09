@@ -1,15 +1,14 @@
 export type LoginRequest = {
-  email: string;
+  username: string;
   password: string;
 };
 
 export type SignupRequest = {
-  name: string;
-  email: string;
+  username: string;
   password: string;
 };
 
 export type AuthResponse = {
   access_token: string;
-  token_type?: string;
+  token_type: string;
 };

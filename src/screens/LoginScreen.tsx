@@ -10,7 +10,7 @@ type Props = NativeStackScreenProps<AuthStackParamList, "Login">;
 
 export function LoginScreen({ navigation }: Props) {
   const { login } = useAuth();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const [busy, setBusy] = useState(false);
@@ -18,7 +18,7 @@ export function LoginScreen({ navigation }: Props) {
 
   async function onSubmit() {
     setErrors({});
-    const parsed = loginSchema.safeParse({ email, password });
+    const parsed = loginSchema.safeParse({ username, password });
     if (!parsed.success) {
       setErrors(zodFieldErrors(parsed.error));
       return;
@@ -40,14 +40,13 @@ export function LoginScreen({ navigation }: Props) {
 
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder="Username"
         autoCapitalize="none"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
+        value={username}
+        onChangeText={setUsername}
         editable={!busy}
       />
-      <FieldError message={errors.email} />
+      <FieldError message={errors.username} />
 
       <TextInput
         style={styles.input}
